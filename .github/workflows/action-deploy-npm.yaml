@@ -1,0 +1,51 @@
+name: Release and Publish
+on:
+  workflow_dispatch:
+  workflow_call:
+  release:
+    types: [released]
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  test:
+    name: 🧪 Test
+    uses: ./.github/workflows/action-test.yaml
+
+  publish:
+    name: 🚀 Publish
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'release'
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - name: Download the build artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: dist
+          path: ./
+
+      # registry-url writes an .npmrc that points the install/publish at GitHub
+      # Packages and reads NODE_AUTH_TOKEN for auth.
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: lts/*
+          registry-url: 'https://npm.pkg.github.com'
+
+      # Publish to GitHub Packages with the workflow's GITHUB_TOKEN (packages:
+      # write). The package scope (@the-rabbit-hole-tech) must match the owner.
+      # Idempotent: skip if that exact version already exists (partial-publish
+      # retry).
+      - name: Publish to GitHub Packages
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          NAME=$(node -p "require('./package.json').name")
+          if npm view "${NAME}@${VERSION}" version >/dev/null 2>&1; then
+            echo "${NAME}@${VERSION} already published -- skipping."
+          else
+            npm publish --access public --ignore-scripts
+          fi

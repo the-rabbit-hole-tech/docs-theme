@@ -1,0 +1,12 @@
+node_modules/
+dist/
+coverage/
+docs/
+*.log
+
+# local design notes - never committed
+plan/
+
+.DS_Store
+.idea/
+.vscode/
