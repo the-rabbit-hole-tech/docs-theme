@@ -5,7 +5,7 @@ version: '3'
 vars:
   GOLIC_VERSION: v0.3.0
   TEMPLATE_LIC: "mit"
-  COMMON_LIC: "2026 Bugs5382"
+  COMMON_LIC: "2026 Shane"
 tasks:
   license:
     desc: Verify every source file carries the MIT license header (CI; never writes).
