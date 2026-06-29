@@ -22,16 +22,39 @@ OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 import { defineConfig } from "tsdown";
 
-// Only the plugin entry and the config helper are compiled. The theme component
-// (TOC) and the landing component ship as uncompiled source — Docusaurus
-// compiles them with its own `@theme` / CSS-module pipeline — so they are not
-// listed here. The compiled entries import only node builtins, a type-only
-// `@docusaurus/types`, and `prism-react-renderer`; the latter is a peer dep, so
-// tsdown leaves it external by default (no explicit `external` needed).
+// The plugin entry and config helper are compiled for Node (Docusaurus loads
+// them at build time). The theme component (TOC) and the landing component are
+// ALSO compiled to JS so a consuming site can load them from node_modules —
+// Docusaurus does not run the TS loader over node_modules, so shipping raw
+// .tsx breaks consumption. Their Docusaurus virtual imports (`@theme/*`,
+// `@theme-original/*`, `@docusaurus/*`), React, and the CSS module are kept
+// external so they resolve inside the consumer's Docusaurus build.
 export default defineConfig({
-  entry: ["src/index.ts", "src/config.ts"],
+  entry: {
+    index: "src/index.ts",
+    config: "src/config.ts",
+    "theme/TOC/index": "src/theme/TOC/index.tsx",
+    "components/Landing/index": "src/components/Landing/index.tsx",
+  },
   format: ["esm", "cjs"],
   dts: true,
   clean: true,
   sourcemap: true,
+  external: [
+    "react",
+    "react-dom",
+    "prism-react-renderer",
+    /^@theme/,
+    /^@theme-original/,
+    /^@docusaurus/,
+    /\.module\.css$/,
+  ],
+  // The landing component imports its CSS module by relative path; copy it
+  // next to the compiled output so the import resolves in the consumer build.
+  copy: [
+    {
+      from: "src/components/Landing/styles.module.css",
+      to: "dist/components/Landing/styles.module.css",
+    },
+  ],
 });

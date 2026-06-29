@@ -29,7 +29,16 @@
         "default": "./dist/config.cjs"
       }
     },
-    "./landing": "./src/components/Landing/index.tsx",
+    "./landing": {
+      "import": {
+        "types": "./dist/components/Landing/index.d.mts",
+        "default": "./dist/components/Landing/index.mjs"
+      },
+      "require": {
+        "types": "./dist/components/Landing/index.d.cts",
+        "default": "./dist/components/Landing/index.cjs"
+      }
+    },
     "./styles/custom.css": "./styles/custom.css",
     "./static/img/favicon.svg": "./static/img/favicon.svg"
   },

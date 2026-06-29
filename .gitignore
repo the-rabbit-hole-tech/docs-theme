@@ -10,3 +10,9 @@ plan/
 .DS_Store
 .idea/
 .vscode/
+
+# Local theme preview (throwaway consumer site, never committed)
+/preview/
+
+# Stray agent worktrees (never committed)
+.claude/worktrees/

@@ -65,12 +65,13 @@ export default function docsTheme(_context: LoadContext, _options: unknown): Plu
   return {
     name: "@the-rabbit-hole-tech/docs-theme",
     getThemePath() {
-      // Theme components ship as source so Docusaurus compiles them with its
-      // own `@theme` / `@theme-original` aliases. Point at the published source
-      // dir, which sits one level up from the compiled plugin entry in `dist/`.
-      return path.join(moduleDir(), "..", "src", "theme");
+      // Compiled theme components (Docusaurus does not run the TS loader over
+      // node_modules, so these must be JS). They sit next to the compiled
+      // plugin entry in `dist/`.
+      return path.join(moduleDir(), "theme");
     },
     getTypeScriptThemePath() {
+      // TS source, used by `docusaurus swizzle --typescript`.
       return path.join(moduleDir(), "..", "src", "theme");
     },
   };
