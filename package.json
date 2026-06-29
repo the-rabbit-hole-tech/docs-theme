@@ -1,6 +1,6 @@
 {
   "name": "@the-rabbit-hole-tech/docs-theme",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Shared Docusaurus theme for the rabbit hole docs sites",
   "author": "Shane",
   "license": "MIT",
