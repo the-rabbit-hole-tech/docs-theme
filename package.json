@@ -2,7 +2,7 @@
   "name": "@the-rabbit-hole-tech/docs-theme",
   "version": "0.0.0",
   "description": "Shared Docusaurus theme for the rabbit hole docs sites",
-  "author": "Bugs5382",
+  "author": "Shane",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.cjs",
