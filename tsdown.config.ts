@@ -49,12 +49,4 @@ export default defineConfig({
     /^@docusaurus/,
     /\.module\.css$/,
   ],
-  // The landing component imports its CSS module by relative path; copy it
-  // next to the compiled output so the import resolves in the consumer build.
-  copy: [
-    {
-      from: "src/components/Landing/styles.module.css",
-      to: "dist/components/Landing/styles.module.css",
-    },
-  ],
 });

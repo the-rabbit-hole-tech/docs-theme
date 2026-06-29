@@ -26,7 +26,6 @@ import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import Layout from "@theme/Layout";
 import Heading from "@theme/Heading";
 import CodeBlock from "@theme/CodeBlock";
-import styles from "./styles.module.css";
 
 /** A call-to-action button rendered in the hero. */
 export interface LandingButton {
@@ -94,7 +93,7 @@ export interface LandingProps {
 const VARIANT_CLASS: Record<NonNullable<LandingButton["variant"]>, string> = {
   primary: "button button--primary button--lg",
   secondary: "button button--secondary button--lg",
-  ghost: `button button--lg ${styles.ghostButton}`,
+  ghost: "button button--lg rhl-ghost-button",
 };
 
 function CtaButton({ button }: { button: LandingButton }): ReactNode {
@@ -120,14 +119,14 @@ function Hero({
 }: Pick<LandingProps, "title" | "tagline" | "buttons">): ReactNode {
   const { siteConfig } = useDocusaurusContext();
   return (
-    <header className={styles.hero}>
+    <header className={"rhl-hero"}>
       <div className="container">
-        <Heading as="h1" className={styles.heroTitle}>
+        <Heading as="h1" className={"rhl-hero-title"}>
           {title ?? siteConfig.title}
         </Heading>
-        <p className={styles.heroTagline}>{tagline ?? siteConfig.tagline}</p>
+        <p className={"rhl-hero-tagline"}>{tagline ?? siteConfig.tagline}</p>
         {buttons && buttons.length > 0 && (
-          <div className={styles.heroButtons}>
+          <div className={"rhl-hero-buttons"}>
             {buttons.map((b) => (
               <CtaButton key={b.label} button={b} />
             ))}
@@ -140,18 +139,18 @@ function Hero({
 
 function Features({ features }: { features: LandingFeature[] }): ReactNode {
   return (
-    <section className={styles.features}>
+    <section className={"rhl-features"}>
       <div className="container">
         <div className="row">
           {features.map((f, i) => (
             <div className="col col--4" key={typeof f.title === "string" ? f.title : i}>
-              <div className={styles.card}>
+              <div className={"rhl-card"}>
                 {f.icon != null && (
-                  <div className={styles.cardIcon} aria-hidden="true">
+                  <div className={"rhl-card-icon"} aria-hidden="true">
                     {f.icon}
                   </div>
                 )}
-                <Heading as="h3" className={styles.cardTitle}>
+                <Heading as="h3" className={"rhl-card-title"}>
                   {f.title}
                 </Heading>
                 <p>{f.body}</p>
@@ -166,19 +165,19 @@ function Features({ features }: { features: LandingFeature[] }): ReactNode {
 
 function Quickstart({ quickstart }: { quickstart: LandingQuickstart }): ReactNode {
   return (
-    <section className={styles.quickstart}>
+    <section className={"rhl-quickstart"}>
       <div className="container">
-        <Heading as="h2" className={styles.sectionTitle}>
+        <Heading as="h2" className={"rhl-section-title"}>
           {quickstart.title ?? "Quickstart"}
         </Heading>
-        {quickstart.lede != null && <p className={styles.sectionLede}>{quickstart.lede}</p>}
-        <div className={styles.quickstartCode}>
+        {quickstart.lede != null && <p className={"rhl-section-lede"}>{quickstart.lede}</p>}
+        <div className={"rhl-quickstart-code"}>
           <CodeBlock language={quickstart.language ?? "bash"} title={quickstart.fileName}>
             {quickstart.code}
           </CodeBlock>
         </div>
         {quickstart.cta && (
-          <div className={styles.quickstartLink}>
+          <div className={"rhl-quickstart-link"}>
             <CtaButton button={quickstart.cta} />
           </div>
         )}
