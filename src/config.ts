@@ -23,11 +23,13 @@ OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 import { themes as prismThemes } from "prism-react-renderer";
 
 /**
- * The brand color mode: dark by default, and the site does not follow the OS
- * preference (the brand is dark-first). Spread into `themeConfig`.
+ * The brand color mode: dark only. There is no light/dark switch, and the site
+ * does not follow the OS preference (the brand is dark-first). Spread into
+ * `themeConfig`.
  */
 export const colorMode = {
   defaultMode: "dark",
+  disableSwitch: true,
   respectPrefersColorScheme: false,
 } as const;
 
