@@ -10,6 +10,7 @@
 
 #### 🐛 Bug Fixes
 
+- fix(ci): stop the publish job presenting a placeholder credential @Bugs5382 (#19)
 - fix(ci): force v1.0.0 as the first version in the Release Manager @Bugs5382 (#15)
 - fix(build): publish to the registry the workflow configures @Bugs5382 (#11)
 
