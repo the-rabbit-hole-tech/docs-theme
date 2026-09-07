@@ -13,12 +13,7 @@ site so they all look and behave the same.
 npm install @the-rabbit-hole/docs-theme
 ```
 
-Public npm — no registry configuration and no token. Earlier versions were
-published to GitHub Packages as `@the-rabbit-hole-tech/docs-theme`, whose
-registry demands authentication even to read a public package; that shut out
-public repositories and anyone cloning one. If you are on the old package,
-change the dependency name and delete the `.npmrc` and `NODE_AUTH_TOKEN` you
-needed for it.
+Public npm — no registry configuration and no token.
 
 It expects Docusaurus and React as peers, which a Docusaurus site already has:
 
