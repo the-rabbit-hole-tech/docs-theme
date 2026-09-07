@@ -50,9 +50,34 @@ jobs:
           token: ${{ steps.app-token.outputs.token }}
           fetch-depth: 0
 
+      # release-drafter derives the next version from the last PUBLISHED release
+      # and starts at 0.1.0 when there is none, which would walk this package
+      # backwards from the 1.0.0 it already carries. Force the first version
+      # instead. Once v1.0.0 is published, release-drafter anchors to that tag
+      # and this override goes quiet on its own.
+      - name: 🥇 Force the first version
+        id: first_version
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          published="$(gh api "repos/$GITHUB_REPOSITORY/releases" \
+            --paginate --jq '[.[] | select(.draft == false)] | length' \
+            | awk '{ total += $1 } END { print total + 0 }')"
+          if [ "$published" -eq 0 ]; then
+            echo "No published release yet; forcing v1.0.0 as the first version."
+            echo "version=1.0.0" >> "$GITHUB_OUTPUT"
+          else
+            echo "$published published release(s); release-drafter resolves the version."
+            echo "version=" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: 📝 Release Drafter (Anticipate Version)
         id: drafter
         uses: release-drafter/release-drafter@v6
+        with:
+          # Empty unless this is the first release, in which case release-drafter
+          # would otherwise resolve 0.1.0.
+          version: ${{ steps.first_version.outputs.version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
