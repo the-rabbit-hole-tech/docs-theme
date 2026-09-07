@@ -45,14 +45,14 @@ function moduleDir(): string {
  * import type { Config } from "@docusaurus/types";
  *
  * const config: Config = {
- *   plugins: ["@the-rabbit-hole-tech/docs-theme"],
+ *   plugins: ["@the-rabbit-hole/docs-theme"],
  *   presets: [
  *     [
  *       "classic",
  *       {
  *         theme: {
  *           customCss: require.resolve(
- *             "@the-rabbit-hole-tech/docs-theme/styles/custom.css",
+ *             "@the-rabbit-hole/docs-theme/styles/custom.css",
  *           ),
  *         },
  *       },
@@ -63,7 +63,7 @@ function moduleDir(): string {
  */
 export default function docsTheme(_context: LoadContext, _options: unknown): Plugin<undefined> {
   return {
-    name: "@the-rabbit-hole-tech/docs-theme",
+    name: "@the-rabbit-hole/docs-theme",
     getThemePath() {
       // Compiled theme components (Docusaurus does not run the TS loader over
       // node_modules, so these must be JS). They sit next to the compiled

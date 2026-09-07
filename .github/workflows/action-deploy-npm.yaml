@@ -7,7 +7,9 @@ on:
 
 permissions:
   contents: read
-  packages: write
+  # Provenance is signed with the workflow's OIDC identity, so npm can attest
+  # that this tarball came from this repository at this commit.
+  id-token: write
 
 jobs:
   test:
@@ -26,26 +28,20 @@ jobs:
           name: dist
           path: ./
 
-      # registry-url writes an .npmrc that points the install/publish at GitHub
-      # Packages and reads NODE_AUTH_TOKEN for auth.
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
           node-version: lts/*
-          registry-url: 'https://npm.pkg.github.com'
+          registry-url: 'https://registry.npmjs.org'
 
-      # Publish to GitHub Packages with the workflow's GITHUB_TOKEN (packages:
-      # write). The package scope (@the-rabbit-hole-tech) must match the owner.
-      # Idempotent: skip if that exact version already exists (partial-publish
-      # retry).
-      - name: Publish to GitHub Packages
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          VERSION=$(node -p "require('./package.json').version")
-          NAME=$(node -p "require('./package.json').name")
-          if npm view "${NAME}@${VERSION}" version >/dev/null 2>&1; then
-            echo "${NAME}@${VERSION} already published -- skipping."
-          else
-            npm publish --access public --ignore-scripts
-          fi
+      # Public npm, so a consumer needs no registry configuration and no token.
+      # That is the point of the move: the GitHub Packages registry requires
+      # authentication even to read a public package, which shuts out public
+      # repositories and anyone cloning one.
+      - name: Publish to npm
+        uses: JS-DevTools/npm-publish@v4
+        with:
+          provenance: true
+          access: public
+          ignore-scripts: true
+          token: ${{ secrets.NPM_TOKEN }}

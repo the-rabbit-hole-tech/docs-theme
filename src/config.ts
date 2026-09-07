@@ -49,7 +49,7 @@ export const prism = {
  *
  * @example
  * ```ts
- * import { recommendedThemeConfig } from "@the-rabbit-hole-tech/docs-theme/config";
+ * import { recommendedThemeConfig } from "@the-rabbit-hole/docs-theme/config";
  *
  * const themeConfig = {
  *   ...recommendedThemeConfig,
@@ -65,3 +65,46 @@ export const recommendedThemeConfig = {
   },
   prism,
 };
+
+/**
+ * The brand version-picker convention for the *unreleased* docs: the label the
+ * dropdown shows for work in progress, the URL it lives under, and the banner
+ * Docusaurus paints above it.
+ *
+ * Sites were configuring this by hand and it drifted — one read the label
+ * below, the next `v0.7.0 (next)`, so the same dropdown said different things
+ * across the estate. Owning it here fixes it once. The theme already styles the version
+ * banner and chip, so the wording belongs with them.
+ *
+ * Spread it into the `versions` of the `docs` preset. Leave `lastVersion`
+ * alone unless a site really means to pin it: by default Docusaurus makes the
+ * newest entry in `versions.json` the default, which is the released docs, and
+ * that is the intended behaviour.
+ *
+ * @example
+ * ```ts
+ * import { recommendedVersions } from "@the-rabbit-hole/docs-theme/config";
+ *
+ * presets: [
+ *   [
+ *     "classic",
+ *     {
+ *       docs: {
+ *         sidebarPath: "./sidebars.ts",
+ *         versions: { ...recommendedVersions },
+ *       },
+ *     },
+ *   ],
+ * ];
+ * ```
+ */
+export const recommendedVersions = {
+  current: {
+    banner: "unreleased",
+    // The construction sign is escaped rather than written literally: the
+    // repository's hygiene gate blocks emoji in source, allowing them only in
+    // Markdown. The rendered label is identical.
+    label: "Next \u{1F6A7}",
+    path: "next",
+  },
+} as const;

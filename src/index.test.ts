@@ -29,7 +29,7 @@ describe("docsTheme plugin", () => {
   const plugin = docsTheme({} as LoadContext, undefined);
 
   it("registers under the scoped package name", () => {
-    expect(plugin.name).toBe("@the-rabbit-hole-tech/docs-theme");
+    expect(plugin.name).toBe("@the-rabbit-hole/docs-theme");
   });
 
   it("points getThemePath at an existing theme directory", () => {

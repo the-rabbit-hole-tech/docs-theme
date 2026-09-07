@@ -193,7 +193,7 @@ function Quickstart({ quickstart }: { quickstart: LandingQuickstart }): ReactNod
  *
  * @example
  * ```tsx
- * import Landing from "@the-rabbit-hole-tech/docs-theme/landing";
+ * import Landing from "@the-rabbit-hole/docs-theme/landing";
  *
  * export default function Home(): JSX.Element {
  *   return (
