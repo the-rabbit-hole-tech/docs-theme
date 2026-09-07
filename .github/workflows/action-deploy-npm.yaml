@@ -38,8 +38,18 @@ jobs:
       # token to install this.
       - name: Publish to npm
         uses: JS-DevTools/npm-publish@v4
+        env:
+          # setup-node writes `_authToken=${NODE_AUTH_TOKEN}` into the job's
+          # .npmrc and exports a placeholder value when nothing supplies one.
+          # npm then presents that placeholder as a credential and fails with
+          # ENEEDAUTH rather than falling back to the OIDC exchange trusted
+          # publishing relies on. Binding it to the secret keeps a real token
+          # working while leaving it empty when there is none, which is what
+          # lets npm reach for OIDC.
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         with:
           provenance: true
           access: public
           ignore-scripts: true
+          # Not required with trusted publishing; empty falls through to OIDC.
           token: ${{ secrets.NPM_TOKEN }}
