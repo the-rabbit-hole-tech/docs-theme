@@ -2,13 +2,6 @@
 
 ## v1.0.0 - 2026-09-07
 
-First release, published to public npm as `@the-rabbit-hole/docs-theme`.
-
-A dark-first brand theme for Docusaurus v3: the brand CSS tokens, a collapsible
-right-side table of contents, a reusable landing-page template, mermaid diagram
-support, and a recommended config fragment, so every rabbit hole docs site looks
-and behaves the same.
-
 ### What Changed 👀
 
 #### 🚀 Features
