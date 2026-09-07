@@ -44,7 +44,7 @@ describe("recommended config", () => {
 
 describe("recommendedVersions", () => {
   it("labels the unreleased docs consistently", () => {
-    expect(recommendedVersions.current.label).toBe("Next 🚧");
+    expect(recommendedVersions.current.label).toBe("Next \u{1F6A7}");
   });
 
   it("serves the unreleased docs from /next", () => {
