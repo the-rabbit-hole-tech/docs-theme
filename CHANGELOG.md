@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.1.0 - 2026-09-07
+
+### What Changed 👀
+
+#### 💥 Breaking Changes
+
+- build!: publish to public npm as @the-rabbit-hole/docs-theme @Bugs5382 (#9)
+
+#### 🐛 Bug Fixes
+
+- fix(build): publish to the registry the workflow configures @Bugs5382 (#11)
+
+### Extra
+
+**Full Changelog**: https://github.com/the-rabbit-hole-tech/docs-theme/compare/...v0.1.0
+
 ## v1.0.0 - 2026-09-07
 
 First release, published to public npm as `@the-rabbit-hole/docs-theme`.
