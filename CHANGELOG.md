@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.0.0 - 2026-09-07
+
+### What Changed 👀
+
+#### 💥 Breaking Changes
+
+- build!: publish to public npm as @the-rabbit-hole/docs-theme @Bugs5382 (#9)
+
+### Extra
+
+**Full Changelog**: https://github.com/the-rabbit-hole-tech/docs-theme/compare/v0.1.0...v1.0.0
+
 ## v0.1.0 - 2026-06-29
 
 ### What Changed 👀
