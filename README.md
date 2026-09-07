@@ -1,4 +1,4 @@
-# @the-rabbit-hole-tech/docs-theme
+# @the-rabbit-hole/docs-theme
 
 > Shared Docusaurus theme for the rabbit hole docs sites.
 
@@ -9,27 +9,16 @@ site so they all look and behave the same.
 
 ## Install
 
-This package is published to **GitHub Packages**, not the public npm registry.
-Point the `@the-rabbit-hole-tech` scope at the GitHub registry once, in the
-consuming site's `.npmrc`:
-
-```ini
-@the-rabbit-hole-tech:registry=https://npm.pkg.github.com
-```
-
-Reading from GitHub Packages requires authentication even for public packages.
-Use a token with the `read:packages` scope (`NODE_AUTH_TOKEN` in CI, or a line
-in `~/.npmrc` locally):
-
-```ini
-//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
-```
-
-Then install:
-
 ```bash
-npm install @the-rabbit-hole-tech/docs-theme
+npm install @the-rabbit-hole/docs-theme
 ```
+
+Public npm — no registry configuration and no token. Earlier versions were
+published to GitHub Packages as `@the-rabbit-hole-tech/docs-theme`, whose
+registry demands authentication even to read a public package; that shut out
+public repositories and anyone cloning one. If you are on the old package,
+change the dependency name and delete the `.npmrc` and `NODE_AUTH_TOKEN` you
+needed for it.
 
 It expects Docusaurus and React as peers, which a Docusaurus site already has:
 
@@ -52,7 +41,7 @@ presets: [
     {
       theme: {
         customCss: require.resolve(
-          "@the-rabbit-hole-tech/docs-theme/styles/custom.css",
+          "@the-rabbit-hole/docs-theme/styles/custom.css",
         ),
       },
     },
@@ -67,7 +56,7 @@ it contributes the collapsible right-side table of contents:
 
 ```ts
 // docusaurus.config.ts
-plugins: ["@the-rabbit-hole-tech/docs-theme"];
+plugins: ["@the-rabbit-hole/docs-theme"];
 ```
 
 ### 3. Recommended config fragment
@@ -77,7 +66,7 @@ dark theme) into `themeConfig`, then add your site's own navbar and footer:
 
 ```ts
 // docusaurus.config.ts
-import { recommendedThemeConfig } from "@the-rabbit-hole-tech/docs-theme/config";
+import { recommendedThemeConfig } from "@the-rabbit-hole/docs-theme/config";
 
 const themeConfig = {
   ...recommendedThemeConfig,
@@ -93,6 +82,38 @@ your site's `static/img`:
 favicon: "img/favicon.svg";
 ```
 
+### 4. Version picker
+
+If the site has versioned docs, spread `recommendedVersions` into the `docs`
+preset's `versions`. It sets the label, path and banner for the *unreleased*
+docs so the dropdown reads the same on every site:
+
+```ts
+// docusaurus.config.ts
+import { recommendedVersions } from "@the-rabbit-hole/docs-theme/config";
+
+presets: [
+  [
+    "classic",
+    {
+      docs: {
+        sidebarPath: "./sidebars.ts",
+        versions: { ...recommendedVersions },
+      },
+    },
+  ],
+];
+```
+
+That gives `current` the label **Next 🚧**, the path `next`, and the
+`unreleased` banner — which the theme already styles. Leave `lastVersion` alone
+unless the site really means to pin it: by default Docusaurus makes the newest
+entry in `versions.json` the default, which is the released docs.
+
+Sites were configuring this by hand and it drifted — one dropdown read
+`Next 🚧`, another `v0.7.0 (next)`. The wording belongs with the banner styling
+that the theme already owns.
+
 ### 4. Landing page (optional)
 
 Build a branded home page by importing the `Landing` template into your site's
@@ -101,7 +122,7 @@ site `title`/`tagline` when you do not pass them:
 
 ```tsx
 // src/pages/index.tsx
-import Landing from "@the-rabbit-hole-tech/docs-theme/landing";
+import Landing from "@the-rabbit-hole/docs-theme/landing";
 
 export default function Home(): JSX.Element {
   return (

@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 import { describe, expect, it } from "vitest";
-import { colorMode, prism, recommendedThemeConfig } from "./config.js";
+import { colorMode, prism, recommendedThemeConfig, recommendedVersions } from "./config.js";
 
 describe("recommended config", () => {
   it("defaults to the dark, brand-fixed color mode", () => {
@@ -39,5 +39,26 @@ describe("recommended config", () => {
     expect(recommendedThemeConfig.colorMode).toBe(colorMode);
     expect(recommendedThemeConfig.prism).toBe(prism);
     expect(recommendedThemeConfig.docs.sidebar.hideable).toBe(true);
+  });
+});
+
+describe("recommendedVersions", () => {
+  it("labels the unreleased docs consistently", () => {
+    expect(recommendedVersions.current.label).toBe("Next 🚧");
+  });
+
+  it("serves the unreleased docs from /next", () => {
+    expect(recommendedVersions.current.path).toBe("next");
+  });
+
+  it("marks them with the banner the theme styles", () => {
+    expect(recommendedVersions.current.banner).toBe("unreleased");
+  });
+
+  it("describes only `current`, leaving released versions to the site", () => {
+    // A site's released versions come from versions.json, and lastVersion
+    // should keep defaulting to the newest of them. If this convention grew a
+    // second key it would start overriding that.
+    expect(Object.keys(recommendedVersions)).toStrictEqual(["current"]);
   });
 });

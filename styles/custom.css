@@ -11,7 +11,7 @@
  * accent — the body accent is always monochrome grey.
  *
  * Consume by adding this file to `theme.customCss` in docusaurus.config.ts:
- *   customCss: require.resolve("@the-rabbit-hole-tech/docs-theme/styles/custom.css")
+ *   customCss: require.resolve("@the-rabbit-hole/docs-theme/styles/custom.css")
  */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Oswald:wght@400;500;600;700&display=swap");
 
