@@ -5,13 +5,18 @@ on:
   pull_request:
     branches: ["**"]
     types: [opened, reopened, ready_for_review, synchronize]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '.github/**'
+      - 'LICENSE'
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 jobs:
   build:
     name: 🧪 Build
-    runs-on: ubuntu-latest
+    runs-on: arc-runner-set
     strategy:
       matrix:
         node-version: [24.x, 'lts/*', 'latest']

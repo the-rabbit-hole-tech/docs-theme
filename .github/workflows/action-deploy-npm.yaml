@@ -5,6 +5,12 @@ on:
   release:
     types: [released]
 
+# One run per branch, and it is left to finish. This one publishes,
+# and a publish interrupted half way through is worse than a publish
+# that waited.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
 permissions:
   contents: read
   # Provenance is signed with the workflow's OIDC identity, so npm can attest
@@ -19,7 +25,7 @@ jobs:
   publish:
     name: 🚀 Publish
     if: github.event_name == 'workflow_dispatch' || github.event_name == 'release'
-    runs-on: ubuntu-latest
+    runs-on: arc-runner-set
     needs: [test]
     steps:
       - name: Download the build artifact
