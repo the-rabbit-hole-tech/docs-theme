@@ -19,7 +19,7 @@ jobs:
   publish:
     name: 🚀 Publish
     if: github.event_name == 'workflow_dispatch' || github.event_name == 'release'
-    runs-on: ubuntu-latest
+    runs-on: arc-runner-set
     needs: [test]
     steps:
       - name: Download the build artifact

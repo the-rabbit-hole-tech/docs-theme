@@ -11,7 +11,7 @@ concurrency:
 jobs:
   build:
     name: 🧪 Build
-    runs-on: ubuntu-latest
+    runs-on: arc-runner-set
     strategy:
       matrix:
         node-version: [24.x, 'lts/*', 'latest']
