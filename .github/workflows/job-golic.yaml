@@ -44,5 +44,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Verify MIT headers
         run: |
-          export PATH="${PATH}:$(go env GOPATH)/bin"
+          gopath="$(go env GOPATH)"
+          export PATH="${PATH}:${gopath}/bin"
           task license
