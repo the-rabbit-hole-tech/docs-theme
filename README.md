@@ -1,19 +1,19 @@
-# @the-rabbit-hole/docs-theme
+# @the-rabbit-hole/docs-theme 🐇
 
-> Shared Docusaurus theme for the rabbit hole docs sites.
+> 📚 Shared Docusaurus theme for the rabbit hole docs sites.
 
 A dark-first brand theme for [Docusaurus](https://docusaurus.io) v3: the brand
 CSS tokens, a collapsible right-side table of contents, a reusable landing-page
 template, and a recommended config fragment. Drop it into any rabbit hole docs
 site so they all look and behave the same.
 
-## Install
+## 📦 Install
 
 ```bash
 npm install @the-rabbit-hole/docs-theme
 ```
 
-Public npm — no registry configuration and no token.
+🌍 Public npm — no registry configuration and no token.
 
 It expects Docusaurus and React as peers, which a Docusaurus site already has:
 
@@ -21,7 +21,7 @@ It expects Docusaurus and React as peers, which a Docusaurus site already has:
 npm install @docusaurus/core @docusaurus/preset-classic react react-dom prism-react-renderer
 ```
 
-## Use
+## 🚀 Use
 
 ### 1. Brand CSS
 
@@ -109,7 +109,7 @@ Sites were configuring this by hand and it drifted — one dropdown read
 `Next 🚧`, another `v0.7.0 (next)`. The wording belongs with the banner styling
 that the theme already owns.
 
-### 4. Landing page (optional)
+### 5. Landing page (optional)
 
 Build a branded home page by importing the `Landing` template into your site's
 `src/pages/index.tsx` and supplying your own copy. The hero falls back to the
@@ -143,7 +143,7 @@ export default function Home(): JSX.Element {
 }
 ```
 
-## Brand token contract
+## 🎨 Brand token contract
 
 The CSS sets these Infima variables on `:root` (light) and `[data-theme="dark"]`
 (the brand default). Override them in your own later-loaded CSS if a site needs
@@ -172,7 +172,7 @@ Sky-blue `#90c1f3` is reserved for the **header component** and the docs
 body accent is always monochrome grey. The version banner, version chip, and the
 landing hero glow / ghost-button are the only sanctioned uses in this package.
 
-## Develop
+## 🛠️ Develop
 
 ```bash
 npm install
@@ -195,6 +195,6 @@ enforced by the governance hooks. Install them once per clone:
 bash .claude/hooks/install.sh
 ```
 
-## License
+## ⚖️ License
 
 MIT (c) 2026 Bugs5382
