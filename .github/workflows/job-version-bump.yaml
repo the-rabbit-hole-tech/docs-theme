@@ -79,13 +79,12 @@ jobs:
 
       - name: 📝 Release Drafter (Anticipate Version)
         id: drafter
-        uses: release-drafter/release-drafter@v6
+        uses: release-drafter/release-drafter@v7
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           # Empty unless this is the first release, in which case release-drafter
           # would otherwise resolve 0.1.0.
           version: ${{ steps.first_version.outputs.version }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 🔎 Detect releasable changes
         id: releasable
