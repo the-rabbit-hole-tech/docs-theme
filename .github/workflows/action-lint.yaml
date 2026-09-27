@@ -4,37 +4,52 @@ name: Actionlint
 # id) can merge green and only fail at startup on main. actionlint catches that
 # class at PR time. shellcheck integration is disabled (-shellcheck=) to keep
 # the gate focused on workflow validity; drop that flag to also lint run: shell.
+#
+# Pull requests that touch .github only, and not while the PR is a draft. The
+# PR run covers what merges, so nothing reruns on push to main.
 on:
   pull_request:
     branches: [main]
-    # edited is here so retargeting a stacked PR onto main starts CI. Jobs
-    # skip edited events that did not change the base (title/body edits).
-    types: [opened, synchronize, reopened, edited]
+    types: [opened, synchronize, reopened, ready_for_review]
     paths:
       - '.github/**'
-  push:
-    branches: [main]
-    paths: ['.github/workflows/**']
-# One run per PR per workflow: a new push cancels the older PR run. Pushes to
-# main are never cancelled, so every main commit keeps a result.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}${{ github.event.action == 'edited' && github.event.changes.base == null && format('-edit-{0}', github.run_id) || '' }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 permissions:
   contents: read
 jobs:
   actionlint:
-    name: 🧹 Actionlint${{ github.event.action == 'edited' && github.event.changes.base == null && ' (edit, not run)' || '' }}
-    if: github.event.action != 'edited' || github.event.changes.base != null
+    name: 🧹 Actionlint
+    if: github.event.pull_request.draft == false
     runs-on: arc-runner-set
+    timeout-minutes: 10
     steps:
       - name: 📥 Checkout
         uses: actions/checkout@v4
-      - name: 🐹 Setup Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: "stable"
-      - name: 🧹 Run actionlint
+      # The pinned release binary, checked against the SHA-256 the release
+      # publishes (actionlint_<version>_checksums.txt), instead of compiling
+      # actionlint from source with `go install` on every run. The runners are
+      # arm64 and cannot write to /usr/local/bin, so the architecture is
+      # worked out here and the binary lands in RUNNER_TEMP. Update the sums
+      # together with VERSION.
+      - name: 📦 Install actionlint
+        env:
+          VERSION: "1.7.12"
+          SHA256_AMD64: 8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8
+          SHA256_ARM64: 325e971b6ba9bfa504672e29be93c24981eeb1c07576d730e9f7c8805afff0c6
         run: |
-          go install github.com/rhysd/actionlint/cmd/actionlint@latest
-          "$(go env GOPATH)/bin/actionlint" -color -shellcheck=
+          set -euo pipefail
+          case "$(uname -m)" in
+            aarch64|arm64) arch=arm64; sum="$SHA256_ARM64" ;;
+            *)             arch=amd64; sum="$SHA256_AMD64" ;;
+          esac
+          tarball="actionlint_${VERSION}_linux_${arch}.tar.gz"
+          mkdir -p "${RUNNER_TEMP}/bin"
+          curl -sSfL -o "${RUNNER_TEMP}/${tarball}" \
+            "https://github.com/rhysd/actionlint/releases/download/v${VERSION}/${tarball}"
+          echo "${sum}  ${RUNNER_TEMP}/${tarball}" | sha256sum -c -
+          tar -xzf "${RUNNER_TEMP}/${tarball}" -C "${RUNNER_TEMP}/bin" actionlint
+          echo "${RUNNER_TEMP}/bin" >> "$GITHUB_PATH"
+      - name: 🧹 Run actionlint
+        run: actionlint -color -shellcheck=

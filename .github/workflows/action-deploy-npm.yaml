@@ -26,6 +26,9 @@ jobs:
     name: 🚀 Publish
     if: github.event_name == 'workflow_dispatch' || github.event_name == 'release'
     runs-on: arc-runner-set
+    # Download, set up Node and publish with provenance; the Test job it
+    # needs carries its own timeout (a `uses:` job cannot take one).
+    timeout-minutes: 20
     needs: [test]
     steps:
       - name: Download the build artifact

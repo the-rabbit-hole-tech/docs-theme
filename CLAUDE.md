@@ -24,6 +24,34 @@ the governance below is shared across all repos created that way.
   (`.github/workflows/action-lint.yaml`) enforces this, so a malformed workflow fails at PR time
   instead of silently at startup on `main`.
 
+## CI and Actions minutes
+
+Every job runs on the self-hosted `arc-runner-set` (arm64, no `gh` or `jq` on the image) and pays
+for its own runner start and checkout. The workflows are shaped to start as few jobs as possible:
+
+- **Drafts run nothing.** PR workflows skip draft PRs and run on `ready_for_review`, `opened`,
+  `synchronize` and `reopened`. Open a PR as a draft, run the full checks locally, push once they
+  pass, and mark it ready when the work is finished. That starts one CI run. After it is ready,
+  push only real fixes, batched into one push.
+- **One job for the small checks.** PR Title, PR Body, PR Hygiene, the gitleaks secret scan and the
+  categorizing-label check are steps of one `✅ PR Checks` job (`job-pr-checks.yaml`). Every step
+  runs even when an earlier one fails, so the log shows every failure. It is the only workflow that
+  reacts to `edited`: a title or body fix reruns it, not the build.
+- **Pull requests only.** Test, Actionlint, GoLic and the licence check run on pull requests, not
+  on push to `main`. The squash merge lands the tree the PR run already tested. Only the release
+  workflows (Release Manager on `main`, Release and Publish on a published release, which calls
+  Test through `workflow_call`) and Label Sync run outside a PR.
+- **No no-op jobs.** The licence check is npm only; this repo has no `go.mod`.
+- **Every job has a `timeout-minutes`** (10 for small checks, 15 to 30 for the licence check, Test
+  and releases), so a hung job stops long before GitHub's 360-minute default. The publish
+  workflow's `test` job calls a reusable workflow and cannot take one; Test's own job carries it.
+- **Pinned prebuilt tools.** actionlint and gitleaks install their pinned release binaries for the
+  runner's architecture and check them against the published SHA-256. To bump one, change the
+  version and both checksums in its workflow.
+- **Required checks:** if the ruleset ever lists required checks, use `✅ PR Checks`; it replaces
+  `PR Title`, `PR Body`, `PR Hygiene`, `Gitleaks (secret scan)`, `Autolabel` and `Categorizing label
+  present`.
+
 ## Engineering discipline
 
 - Root-cause before fixing: confirm the actual cause with evidence before changing code; do not
