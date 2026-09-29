@@ -22,16 +22,16 @@ jobs:
   actionlint:
     name: 🧹 Actionlint
     if: github.event.pull_request.draft == false
-    runs-on: { group: self-hosted-private }
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - name: 📥 Checkout
         uses: actions/checkout@v4
       # The pinned release binary, checked against the SHA-256 the release
       # publishes (actionlint_<version>_checksums.txt), instead of compiling
-      # actionlint from source with `go install` on every run. The runners are
-      # arm64 and cannot write to /usr/local/bin, so the architecture is
-      # worked out here and the binary lands in RUNNER_TEMP. Update the sums
+      # actionlint from source with `go install` on every run. The architecture
+      # is worked out here rather than assumed, and the binary lands in
+      # RUNNER_TEMP. Update the sums
       # together with VERSION.
       - name: 📦 Install actionlint
         env:

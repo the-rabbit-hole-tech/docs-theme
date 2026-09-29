@@ -26,9 +26,8 @@ the governance below is shared across all repos created that way.
 
 ## CI and Actions minutes
 
-Every job runs on the org's shared self-hosted runner group (`runs-on: { group: self-hosted-private }`;
-the `arc-runner-set` label is retired; no `gh` or `jq` on the image) and pays
-for its own runner start and checkout. The workflows are shaped to start as few jobs as possible:
+This is a public repo, so every job runs on GitHub-hosted runners (`runs-on: ubuntu-latest`; the
+retired `arc-runner-set` label is not used) and pays for its own runner start and checkout. The workflows are shaped to start as few jobs as possible:
 
 - **Drafts run nothing.** PR workflows skip draft PRs and run on `ready_for_review`, `opened`,
   `synchronize` and `reopened`. Open a PR as a draft, run the full checks locally, push once they

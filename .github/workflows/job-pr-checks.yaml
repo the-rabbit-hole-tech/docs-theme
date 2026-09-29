@@ -6,9 +6,8 @@ name: PR Checks
 #
 # ONE job, with each check as a step. Each of these checks does a few seconds of
 # work, and every job pays for its own runner start and checkout (GitHub bills a
-# hosted job for at least a full minute; on the self-hosted runner group each
-# job still takes a runner), so seven separate jobs across three workflows cost seven starts per run
-# where one job costs one. Every check step runs with `!cancelled()`, so a
+# hosted job for at least a full minute), so seven separate jobs across three
+# workflows cost seven starts per run where one job costs one. Every check step runs with `!cancelled()`, so a
 # failing check never hides the ones after it: the log shows every failure, and
 # the job fails if any step failed. This job replaces job-gitleaks.yaml and
 # job-label-checker.yaml.
@@ -19,8 +18,8 @@ name: PR Checks
 # result replaces the last one for the same commit, so skipping hygiene or
 # gitleaks on an edit would turn an earlier failure green.
 #
-# The label steps talk to the REST API with `curl` rather than the `gh` CLI: the
-# self-hosted runner image carries neither `gh` nor `jq`.
+# The label steps talk to the REST API with `curl` rather than the `gh` CLI, so
+# they need nothing beyond curl, grep and sed on the runner.
 on:
   pull_request:
     branches: [main]
@@ -36,7 +35,7 @@ jobs:
   checks:
     name: ✅ PR Checks
     if: github.event.pull_request.draft == false
-    runs-on: { group: self-hosted-private }
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - name: 📝 PR Title
@@ -101,9 +100,8 @@ jobs:
       - name: Install gitleaks
         id: gitleaks-install
         if: ${{ !cancelled() && steps.checkout.outcome == 'success' }}
-        # The runners are arm64 and the runner user cannot write to
-        # /usr/local/bin, so neither the architecture nor the destination
-        # can be assumed. The tarball is checked against the SHA-256 the
+        # Neither the runner architecture nor a writable /usr/local/bin is
+        # assumed; both are worked out here. The tarball is checked against the SHA-256 the
         # release publishes (gitleaks_<version>_checksums.txt) before it is
         # unpacked; update the sums together with VERSION.
         env:
@@ -187,7 +185,7 @@ jobs:
         run: |
           allowed="breaking enhancement bug fix performance refactor changed deprecated removed security documentation dependencies skip-changelog"
           for attempt in 1 2 3 4 5 6; do
-            # No `jq` on the image: pull the "name" fields out of the labels
+            # No `jq` needed: pull the "name" fields out of the labels
             # array with grep/sed.
             labels="$(curl -sf \
               -H "Authorization: Bearer $GH_TOKEN" \
