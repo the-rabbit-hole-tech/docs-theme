@@ -27,7 +27,7 @@ jobs:
     # Under workflow_call, event_name is the caller's (release or
     # workflow_dispatch), so the draft guard only applies to pull requests.
     if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
-    runs-on: arc-runner-set
+    runs-on: { group: self-hosted-private }
     # Three Node versions on four arm64 cores, each installing, linting,
     # testing, building and rendering the docs.
     timeout-minutes: 30

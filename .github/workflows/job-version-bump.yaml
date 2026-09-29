@@ -23,7 +23,7 @@ permissions:
 jobs:
   Update_Version:
     name: 🚀 Update Changelog & Prep Release
-    runs-on: arc-runner-set
+    runs-on: { group: self-hosted-private }
     timeout-minutes: 15
     steps:
       - name: Check release prerequisites

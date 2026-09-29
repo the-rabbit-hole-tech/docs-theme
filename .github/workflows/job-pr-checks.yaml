@@ -6,8 +6,8 @@ name: PR Checks
 #
 # ONE job, with each check as a step. Each of these checks does a few seconds of
 # work, and every job pays for its own runner start and checkout (GitHub bills a
-# hosted job for at least a full minute; on arc-runner-set each job still takes a
-# pod), so seven separate jobs across three workflows cost seven starts per run
+# hosted job for at least a full minute; on the self-hosted runner group each
+# job still takes a runner), so seven separate jobs across three workflows cost seven starts per run
 # where one job costs one. Every check step runs with `!cancelled()`, so a
 # failing check never hides the ones after it: the log shows every failure, and
 # the job fails if any step failed. This job replaces job-gitleaks.yaml and
@@ -20,7 +20,7 @@ name: PR Checks
 # gitleaks on an edit would turn an earlier failure green.
 #
 # The label steps talk to the REST API with `curl` rather than the `gh` CLI: the
-# arc-runner-set image carries neither `gh` nor `jq`.
+# self-hosted runner image carries neither `gh` nor `jq`.
 on:
   pull_request:
     branches: [main]
@@ -36,7 +36,7 @@ jobs:
   checks:
     name: ✅ PR Checks
     if: github.event.pull_request.draft == false
-    runs-on: arc-runner-set
+    runs-on: { group: self-hosted-private }
     timeout-minutes: 10
     steps:
       - name: 📝 PR Title
