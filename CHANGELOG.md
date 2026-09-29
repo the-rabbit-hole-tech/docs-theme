@@ -1,5 +1,23 @@
 # Changelog
 
+## v1.1.0 - 2026-09-29
+
+### What Changed 👀
+
+- ci: run every job on the self-hosted runners @Bugs5382 (#22)
+
+#### 🚀 Features
+
+- ci: align workflows with hub fixes @Bugs5382 (#28)
+
+#### 📄 Documentation
+
+- docs(readme): apply the lite emoji treatment @Bugs5382 (#27)
+
+### Extra
+
+**Full Changelog**: https://github.com/the-rabbit-hole-tech/docs-theme/compare/v1.0.0...v1.1.0
+
 ## v1.0.0 - 2026-09-07
 
 ### What Changed 👀
