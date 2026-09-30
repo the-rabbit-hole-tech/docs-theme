@@ -26,8 +26,8 @@ jobs:
     name: 🚀 Publish
     if: github.event_name == 'workflow_dispatch' || github.event_name == 'release'
     runs-on: ubuntu-latest
-    # Download, set up Node and publish with provenance; the Test job it
-    # needs carries its own timeout (a `uses:` job cannot take one).
+    # Download, set up Node and stage the version with provenance; the Test
+    # job it needs carries its own timeout (a `uses:` job cannot take one).
     timeout-minutes: 20
     needs: [test]
     steps:
@@ -37,28 +37,67 @@ jobs:
           name: dist
           path: ./
 
+      # No registry-url: with one, setup-node writes `_authToken=${NODE_AUTH_TOKEN}`
+      # into the job's .npmrc and exports a placeholder token, and npm presents
+      # the placeholder instead of doing the OIDC exchange trusted publishing
+      # needs. Without it npm uses the public registry and authenticates
+      # through OIDC alone, so this job holds no npm token.
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
           node-version: lts/*
-          registry-url: 'https://registry.npmjs.org'
 
-      # Public npm, so a consumer needs no registry configuration and no
-      # token to install this.
-      - name: Publish to npm
-        uses: JS-DevTools/npm-publish@v4
-        env:
-          # setup-node writes `_authToken=${NODE_AUTH_TOKEN}` into the job's
-          # .npmrc and exports a placeholder value when nothing supplies one.
-          # npm then presents that placeholder as a credential and fails with
-          # ENEEDAUTH rather than falling back to the OIDC exchange trusted
-          # publishing relies on. Binding it to the secret keeps a real token
-          # working while leaving it empty when there is none, which is what
-          # lets npm reach for OIDC.
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        with:
-          provenance: true
-          access: public
-          ignore-scripts: true
-          # Not required with trusted publishing; empty falls through to OIDC.
-          token: ${{ secrets.NPM_TOKEN }}
+      # Stages the version instead of publishing it. Nobody can install it until
+      # a maintainer approves it with 2FA (`npm stage approve`, or the Staged
+      # Packages tab on npmjs.com). Green here means "staged", not "live".
+      #
+      # Every way of not staging fails the job. A version that is already on
+      # the registry makes npm exit non-zero, and nothing here passes --force,
+      # which would skip that check. A run that exits zero without a stage id
+      # also fails, so an already-published version can never pass as green.
+      - name: Stage on npm
+        id: stage
+        run: |
+          set -euo pipefail
+
+          npm_version="$(npm --version)"
+          echo "npm ${npm_version} on node $(node --version)"
+          # npm stage arrived in npm 11.15.0.
+          if ! node -e '
+            const [major, minor] = process.argv[1].split(".").map(Number);
+            process.exit(major > 11 || (major === 11 && minor >= 15) ? 0 : 1);
+          ' "${npm_version}"; then
+            echo "::error::npm ${npm_version} has no 'npm stage'; 11.15.0 or later is required. Pin a newer npm in this job."
+            exit 1
+          fi
+
+          log="${RUNNER_TEMP}/stage-publish.log"
+          if ! npm stage publish --provenance --access public --ignore-scripts 2>&1 | tee "${log}"; then
+            echo "::error::npm stage publish failed, so nothing was staged. See the npm error above."
+            exit 1
+          fi
+
+          stage_id="$(grep -oE 'staged with id [0-9a-fA-F-]{36}' "${log}" | tail -n 1 | awk '{print $4}' || true)"
+          if [ -z "${stage_id}" ]; then
+            echo "::error::npm stage publish exited 0 but reported no stage id, so there is nothing to approve. Treating this as a failed release."
+            exit 1
+          fi
+
+          echo "Confirming stage ${stage_id} is on the registry"
+          npm stage view "${stage_id}"
+
+          echo "stage-id=${stage_id}" >> "${GITHUB_OUTPUT}"
+          {
+            echo "## Staged on npm, waiting for approval"
+            echo
+            echo "Stage id: \`${stage_id}\`. Nothing is installable until a maintainer approves it with 2FA."
+            echo
+            echo '```bash'
+            echo "npm stage view ${stage_id}"
+            echo "npm stage download ${stage_id}"
+            echo "npm stage approve ${stage_id}"
+            echo "npm stage reject ${stage_id}"
+            echo '```'
+            echo
+            echo "Or review it in the Staged Packages tab on npmjs.com."
+          } >> "${GITHUB_STEP_SUMMARY}"

@@ -222,6 +222,28 @@ enforced by the governance hooks. Install them once per clone:
 bash .claude/hooks/install.sh
 ```
 
+## 🚢 Release
+
+Publishing the GitHub Release runs **Release and Publish**
+(`.github/workflows/action-deploy-npm.yaml`). It does not put the version on
+npm directly. It runs `npm stage publish`, which uploads the tarball with
+provenance to npm's stage queue, and nobody can install it until a maintainer
+approves it with 2FA. A green run means "staged", not "live".
+
+🔐 **Approve with 2FA.** The run's summary lists the stage id and the commands:
+
+```bash
+npm stage view <stage-id>      # what was staged
+npm stage download <stage-id>  # fetch the tarball to inspect it
+npm stage approve <stage-id>   # make it installable (2FA)
+npm stage reject <stage-id>    # throw it away (2FA)
+```
+
+The Staged Packages tab on npmjs.com does the same. The job authenticates
+through npm trusted publishing (OIDC), so it holds no npm token, and it fails
+if nothing was staged: a version already on npm, a missing trusted publisher,
+or an npm older than 11.15.0 all turn the run red.
+
 ## ⚖️ License
 
 MIT (c) 2026 Bugs5382
