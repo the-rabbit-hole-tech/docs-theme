@@ -1,0 +1,77 @@
+/**
+ * the rabbit hole brand theme, greys palette (dark-first) for Docusaurus.
+ *
+ * Surfaces #303030 / #222222 / #121212, footer #0b1119, body text #c9c9c9,
+ * headings #ffffff, a monochrome grey primary/link accent, and the status
+ * tokens success #84a82a, warning #d99a2b, error #c0392b. Headings use Oswald,
+ * body Inter, and code JetBrains Mono (loaded via the Google Fonts import).
+ *
+ * Brand rule: sky-blue #90c1f3 is reserved for the header component and the
+ * docs "unreleased/next" version callout only. It is never a general body
+ * accent — the body accent is always monochrome grey.
+ *
+ * This is the default palette; `custom.css` loads it. Select it explicitly by
+ * adding this file to `theme.customCss` in docusaurus.config.ts:
+ *   customCss: require.resolve("@the-rabbit-hole/docs-theme/styles/greys.css")
+ */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Oswald:wght@400;500;600;700&display=swap");
+@import url("./base.css");
+
+:root {
+  /* Monochrome accent (links, headings). Sky-blue is reserved for the header
+     component, not a body token. Light mode: dark grey. */
+  --ifm-color-primary: #555555;
+  --ifm-color-primary-dark: #4d4d4d;
+  --ifm-color-primary-darker: #494949;
+  --ifm-color-primary-darkest: #3c3c3c;
+  --ifm-color-primary-light: #5d5d5d;
+  --ifm-color-primary-lighter: #616161;
+  --ifm-color-primary-lightest: #6e6e6e;
+  --ifm-code-font-size: 95%;
+  --ifm-global-radius: 0.5rem;
+  --ifm-font-family-base: "Inter", system-ui, -apple-system, sans-serif;
+  --ifm-heading-font-family: "Oswald", sans-serif;
+  --ifm-font-family-monospace:
+    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --docusaurus-highlighted-code-line-bg: rgba(47, 111, 179, 0.1);
+
+  /* The colours base.css reads. */
+  --rhl-border: #444444;
+  --rhl-badge-background: #444444;
+  --rhl-badge-border: #5b5b5b;
+  --rhl-badge-foreground: #ffffff;
+  --rhl-button-background: #444444;
+  --rhl-button-background-hover: #565656;
+  --rhl-button-foreground: #ffffff;
+  --rhl-hero-foreground: #ffffff;
+  --rhl-hero-tagline: #c9c9c9;
+  --rhl-hero-top: #121212;
+  --rhl-hero-bottom: #222222;
+  --rhl-hero-glow: rgba(144, 193, 243, 0.22);
+  --rhl-accent: #90c1f3;
+  --rhl-ghost-border: rgba(144, 193, 243, 0.65);
+  --rhl-ghost-background-hover: rgba(144, 193, 243, 0.14);
+  --rhl-card-shadow-hover: rgba(144, 193, 243, 0.16);
+}
+
+/* the rabbit hole dark palette (the brand default). */
+[data-theme="dark"] {
+  /* Monochrome grey accent (links, headings); sky-blue is header-only. */
+  --ifm-color-primary: #a8a8a8;
+  --ifm-color-primary-dark: #9b9b9b;
+  --ifm-color-primary-darker: #949494;
+  --ifm-color-primary-darkest: #7c7c7c;
+  --ifm-color-primary-light: #b5b5b5;
+  --ifm-color-primary-lighter: #bcbcbc;
+  --ifm-color-primary-lightest: #cfcfcf;
+  --ifm-background-color: #222222;
+  --ifm-background-surface-color: #303030;
+  --ifm-navbar-background-color: #121212;
+  --ifm-footer-background-color: #0b1119;
+  --ifm-color-content: #c9c9c9;
+  --ifm-heading-color: #ffffff;
+  --ifm-color-success: #84a82a;
+  --ifm-color-warning: #d99a2b;
+  --ifm-color-danger: #c0392b;
+  --docusaurus-highlighted-code-line-bg: rgba(144, 193, 243, 0.16);
+}

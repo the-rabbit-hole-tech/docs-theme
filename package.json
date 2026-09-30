@@ -40,6 +40,8 @@
       }
     },
     "./styles/custom.css": "./styles/custom.css",
+    "./styles/greys.css": "./styles/greys.css",
+    "./styles/soil.css": "./styles/soil.css",
     "./static/img/favicon.svg": "./static/img/favicon.svg"
   },
   "files": [
