@@ -23,10 +23,17 @@ npm install @docusaurus/core @docusaurus/preset-classic react react-dom prism-re
 
 ## 🚀 Use
 
-### 1. Brand CSS
+### 1. Brand CSS and palette
 
-Add the brand stylesheet to `theme.customCss` so the tokens, navbar/footer
-borders, version banner/chip, and TOC toggle styles load:
+The theme carries two palettes. Pick one by adding its stylesheet to
+`theme.customCss`; it brings the tokens, the fonts, the navbar/footer borders,
+the version banner/chip, the TOC toggle and the landing styles as one piece:
+
+| Stylesheet          | Palette                                                             | For                                                                       |
+| ------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| `styles/greys.css`  | Neutral greys, a grey accent, Inter body with Oswald headings       | Tools documented in the house style, such as the Go libraries             |
+| `styles/soil.css`   | The warm soil ramp from `ux-ui`, an amber accent, Oswald throughout | The rabbit hole's own sites, so the docs look like the product they cover |
+| `styles/custom.css` | The greys (the default)                                             | Sites set up before the soil palette existed; nothing changes on upgrade  |
 
 ```ts
 // docusaurus.config.ts
@@ -35,14 +42,23 @@ presets: [
     "classic",
     {
       theme: {
-        customCss: require.resolve(
-          "@the-rabbit-hole/docs-theme/styles/custom.css",
-        ),
+        customCss: require.resolve("@the-rabbit-hole/docs-theme/styles/soil.css"),
       },
     },
   ],
 ];
 ```
+
+Load one palette, not both: each sets the same variables, so the second would
+win outright. Both are dark palettes and pair with the dark color mode in the
+recommended config fragment below; the soil palette sets no light-mode accent at
+all, so a soil site should stay dark.
+
+⚠️ **Don't let your own `custom.css` fight the palette.** A site that still
+carries the Docusaurus template's `custom.css` (its green or teal
+`--ifm-color-primary` ramp) and loads it after the theme's stylesheet overrides
+the brand, and ends up with, say, teal headings on a dark ground. Delete those
+template defaults, and keep only rules the site really needs in its own file.
 
 ### 2. Theme plugin (collapsible TOC)
 
@@ -145,32 +161,43 @@ export default function Home(): JSX.Element {
 
 ## 🎨 Brand token contract
 
-The CSS sets these Infima variables on `:root` (light) and `[data-theme="dark"]`
-(the brand default). Override them in your own later-loaded CSS if a site needs
-to, but stay within the palette:
+Both palettes set the same Infima variables on `[data-theme="dark"]` (the brand
+default), so switching palettes is a change of stylesheet, not a list of
+overrides. Override a token in your own later-loaded
+CSS only if a site really needs to, and stay within the palette it picked:
 
-| Token                            | Dark value | Meaning                     |
-| -------------------------------- | ---------- | --------------------------- |
-| `--ifm-background-color`         | `#222222`  | Page surface                |
-| `--ifm-background-surface-color` | `#303030`  | Raised surface (cards)      |
-| `--ifm-navbar-background-color`  | `#121212`  | Navbar                      |
-| `--ifm-footer-background-color`  | `#0b1119`  | Footer                      |
-| `--ifm-color-content`            | `#c9c9c9`  | Body text                   |
-| `--ifm-heading-color`            | `#ffffff`  | Headings                    |
-| `--ifm-color-primary`            | `#a8a8a8`  | Monochrome grey link/accent |
-| `--ifm-color-success`            | `#84a82a`  | Success status              |
-| `--ifm-color-warning`            | `#d99a2b`  | Warning status              |
-| `--ifm-color-danger`             | `#c0392b`  | Error status                |
+| Token                            | Greys (dark) | Soil (dark)                  | Meaning         |
+| -------------------------------- | ------------ | ---------------------------- | --------------- |
+| `--ifm-background-color`         | `#222222`    | `--rh-soil-2` `#372718`      | Page surface    |
+| `--ifm-background-surface-color` | `#303030`    | `--rh-card-top` `#33261a`    | Raised surface  |
+| `--ifm-navbar-background-color`  | `#121212`    | `--rh-soil-5` `#1a1108`      | Navbar          |
+| `--ifm-footer-background-color`  | `#0b1119`    | `--rh-soil-4` `#22170e`      | Footer          |
+| `--ifm-color-content`            | `#c9c9c9`    | `--rh-text-body` `#cbbda8`   | Body text       |
+| `--ifm-heading-color`            | `#ffffff`    | `--rh-text-bright` `#f2e9dc` | Headings        |
+| `--ifm-color-primary`            | `#a8a8a8`    | `--rh-amber` `#c19a52`       | Link and accent |
+| `--ifm-color-success`            | `#84a82a`    | `--rh-green` `#8fa85c`       | Success status  |
+| `--ifm-color-warning`            | `#d99a2b`    | `--rh-amber-hover` `#e0b878` | Warning status  |
+| `--ifm-color-danger`             | `#c0392b`    | `--rh-rust` `#b8705a`        | Error status    |
 
-Fonts: Oswald (headings), Inter (body), JetBrains Mono (code), loaded via a
-Google Fonts import at the top of the stylesheet.
+The soil stylesheet also sets `--ifm-link-hover-color` (`--rh-amber-hover`) and
+`--ifm-color-content-secondary` (`--rh-text-meta`), and it exposes the whole raw
+ramp from `ux-ui`'s `tokens.css` as `--rh-*` HSL triples on `:root`, so a soil
+site can reach the rest of the palette with `hsl(var(--rh-chamber-top))` or
+`hsl(var(--rh-amber) / 0.2)` rather than copying hex values.
+
+Fonts, loaded via a Google Fonts import at the top of each stylesheet:
+
+- **Greys:** Oswald (headings), Inter (body), JetBrains Mono (code).
+- **Soil:** Oswald (headings and body), the system monospace stack (code).
 
 ### The sky-blue rule
 
 Sky-blue `#90c1f3` is reserved for the **header component** and the docs
-**unreleased/next version callout** only. It is never a general body accent — the
-body accent is always monochrome grey. The version banner, version chip, and the
-landing hero glow / ghost-button are the only sanctioned uses in this package.
+**unreleased/next version callout** only. It is never a general body accent: the
+body accent is monochrome grey in the greys palette and amber in the soil one.
+The version banner is sky-blue in both. In the greys palette the landing hero
+glow, ghost-button outline and card hover also use it; in the soil palette those
+take amber.
 
 ## 🛠️ Develop
 

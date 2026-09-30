@@ -1,0 +1,114 @@
+/**
+ * the rabbit hole brand theme, soil palette (dark-first) for Docusaurus.
+ *
+ * The palette the product itself uses: a warm soil ramp (hues 27 to 39) from
+ * the surface of the soil column down to the void, amber as the accent, a
+ * measured text ramp, and Oswald as the face throughout. The raw `--rh-*`
+ * values are ported unchanged from ux-ui's `packages/tokens.css` (HSL triples,
+ * composable with alpha as `hsl(var(--rh-x) / <alpha>)`), and the Infima
+ * tokens are mapped onto them the way ux-ui's semantic layer maps its own.
+ *
+ * Brand rule: sky-blue #90c1f3 stays reserved for the header component and the
+ * docs "unreleased/next" version callout. The body accent here is amber.
+ *
+ * Select it by adding this file to `theme.customCss` in docusaurus.config.ts:
+ *   customCss: require.resolve("@the-rabbit-hole/docs-theme/styles/soil.css")
+ */
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap");
+@import url("./base.css");
+
+:root {
+  /* Raw palette, from ux-ui's tokens.css. Source hex noted per token. */
+
+  /* Soil and structure */
+  --rh-soil-surface: 30 40% 21%; /* #4a3520 — top of the soil column */
+  --rh-soil-1: 32 40% 18%; /* #42301c — upper soil */
+  --rh-soil-2: 29 39% 15%; /* #372718 — mid soil (text contrast baseline) */
+  --rh-soil-3: 29 40% 12%; /* #2c1f13 — lower soil */
+  --rh-soil-4: 27 42% 9%; /* #22170e — deep soil */
+  --rh-soil-5: 30 53% 7%; /* #1a1108 — deepest soil */
+  --rh-chamber-top: 29 37% 12%; /* #2b1f14 — chamber interior, top */
+  --rh-chamber-body: 28 36% 10%; /* #241a11 — chamber interior */
+  --rh-chamber-deep: 28 35% 10%; /* #211810 — chamber interior, lower */
+  --rh-chamber-floor: 32 46% 7%; /* #1b130a — chamber interior, bottom */
+  --rh-card-top: 29 32% 15%; /* #33261a — card gradient start */
+  --rh-card-bottom: 30 38% 10%; /* #241a10 — card gradient end */
+  --rh-bore-dark: 27 43% 4%; /* #0f0a06 — shaft edge */
+  --rh-bore-mid: 28 36% 10%; /* #241a11 — shaft centre */
+  --rh-void: 30 50% 3%; /* #0c0804 — the hole's opening */
+  --rh-page-bg: 28 26% 7%; /* #16110d — outside the soil column */
+
+  /* Text ramp (contrast ratios measured against soil-2) */
+  --rh-text-bright: 35 46% 91%; /* #f2e9dc — headings (11.6:1) */
+  --rh-text-primary: 37 39% 88%; /* #ede4d6 — titles, emphasis (10.8:1) */
+  --rh-text-body: 36 25% 73%; /* #cbbda8 — body copy (7.8:1) */
+  --rh-text-body-dim: 35 21% 67%; /* #bdae99 — secondary body (6.6:1) */
+  --rh-text-muted: 35 19% 62%; /* #b0a08a — standfirst (5.6:1) */
+  --rh-text-meta: 33 17% 56%; /* #a2917c — metadata (4.7:1, AA floor) */
+  --rh-text-label: 36 27% 43%; /* #8a7350 — uppercase labels only (3.2:1) */
+
+  /* Accents */
+  --rh-amber: 39 47% 54%; /* #c19a52 — primary accent, links */
+  --rh-amber-hover: 37 63% 67%; /* #e0b878 — link hover */
+  --rh-amber-light: 38 31% 59%; /* #b8a077 — eyebrows, section labels */
+  --rh-rim-light: 36 39% 62%; /* #c4a678 — lit rock rims */
+  --rh-green: 80 30% 51%; /* #8fa85c — live status */
+  --rh-slate: 203 22% 64%; /* #8fa8b8 */
+  --rh-rust: 14 40% 54%; /* #b8705a — destructive, pitfall borders */
+  --rh-lilac: 274 27% 78%; /* #c9b8d6 */
+
+  /* Border base hue (#7a5c3a); composed with alpha for the three weights */
+  --rh-border-base: 32 36% 35%;
+  --rh-border: hsl(var(--rh-border-base) / 0.4);
+  --rh-border-strong: hsl(var(--rh-border-base) / 0.55);
+  --rh-border-faint: hsl(var(--rh-border-base) / 0.22);
+
+  --ifm-code-font-size: 95%;
+  --ifm-global-radius: 0.375rem;
+  --ifm-font-family-base: "Oswald", sans-serif;
+  --ifm-heading-font-family: "Oswald", sans-serif;
+  --ifm-font-family-monospace: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --docusaurus-highlighted-code-line-bg: hsl(var(--rh-amber) / 0.1);
+
+  /* The colours base.css reads. */
+  --rhl-border: var(--rh-border);
+  --rhl-badge-background: hsl(var(--rh-chamber-top));
+  --rhl-badge-border: hsl(var(--rh-soil-surface));
+  --rhl-badge-foreground: hsl(var(--rh-text-bright));
+  --rhl-button-background: hsl(var(--rh-amber));
+  --rhl-button-background-hover: hsl(var(--rh-amber-hover));
+  --rhl-button-foreground: hsl(var(--rh-soil-5));
+  --rhl-hero-foreground: hsl(var(--rh-text-bright));
+  --rhl-hero-tagline: hsl(var(--rh-text-body));
+  --rhl-hero-top: hsl(var(--rh-soil-5));
+  --rhl-hero-bottom: hsl(var(--rh-soil-2));
+  --rhl-hero-glow: hsl(var(--rh-amber) / 0.22);
+  --rhl-accent: hsl(var(--rh-amber));
+  --rhl-ghost-border: hsl(var(--rh-amber) / 0.65);
+  --rhl-ghost-background-hover: hsl(var(--rh-amber) / 0.14);
+  --rhl-card-shadow-hover: hsl(var(--rh-amber) / 0.16);
+}
+
+[data-theme="dark"] {
+  /* Amber, with Infima's shades taken from its lightness (Docusaurus's own
+     0.7 to 1.3 scale) so hue and saturation stay on the accent. */
+  --ifm-color-primary: hsl(var(--rh-amber));
+  --ifm-color-primary-dark: hsl(39 47% 48.6%);
+  --ifm-color-primary-darker: hsl(39 47% 45.9%);
+  --ifm-color-primary-darkest: hsl(39 47% 37.8%);
+  --ifm-color-primary-light: hsl(39 47% 59.4%);
+  --ifm-color-primary-lighter: hsl(39 47% 62.1%);
+  --ifm-color-primary-lightest: hsl(39 47% 70.2%);
+  --ifm-link-hover-color: hsl(var(--rh-amber-hover));
+  --ifm-background-color: hsl(var(--rh-soil-2));
+  --ifm-background-surface-color: hsl(var(--rh-card-top));
+  --ifm-navbar-background-color: hsl(var(--rh-soil-5));
+  --ifm-footer-background-color: hsl(var(--rh-soil-4));
+  --ifm-color-content: hsl(var(--rh-text-body));
+  --ifm-color-content-secondary: hsl(var(--rh-text-meta));
+  --ifm-heading-color: hsl(var(--rh-text-bright));
+  --ifm-color-success: hsl(var(--rh-green));
+  --ifm-color-warning: hsl(var(--rh-amber-hover));
+  --ifm-color-danger: hsl(var(--rh-rust));
+  --docusaurus-highlighted-code-line-bg: hsl(var(--rh-amber) / 0.16);
+}
