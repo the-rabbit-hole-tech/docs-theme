@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.1.0 - 2026-09-29
+## v1.1.0 - 2026-09-30
 
 ### What Changed 👀
 
@@ -8,6 +8,7 @@
 
 #### 🚀 Features
 
+- feat(styles): carry the soil palette alongside the greys @Bugs5382 (#33)
 - ci: align workflows with hub fixes @Bugs5382 (#28)
 
 #### 📄 Documentation
